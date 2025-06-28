@@ -1,14 +1,15 @@
 //headers 
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthreads.h>
 
-//define global variables: the array, the size of array
 //Global Variables
 int arr[] = { 4, 2, 5, 3, 1 };
 int n = sizeof(arr) / sizeof(arr[0]);
 
 //sorting algorithm: QUICKSORT//////////////////////////////////////////////////////////
 // C Program to sort an array using qsort() function in C
-#include <stdio.h>
-#include <stdlib.h>
+
 
 // If a should be placed before b, compare function should
 // return positive value, if it should be placed after b,
