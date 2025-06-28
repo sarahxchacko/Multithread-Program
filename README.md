@@ -1,2 +1,4 @@
 # Multithread-Program
-for os project 2
+
+Resources:
+https://www.geeksforgeeks.org/c/quick-sort-in-c/
