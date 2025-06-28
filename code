@@ -7,6 +7,13 @@
 //Global Variables
 int N; 
 int *arr[N]; //the * so that it can be dynamically allocated
+int *mergedArray[N];
+
+//Argument struct
+struct ArgsForThread{
+        int begin;
+        int end;
+}
 
 //random array generation
 void randomNum(int min, int max, int count) {
@@ -21,14 +28,27 @@ void randomNum(int min, int max, int count) {
 
 //sorting algorithm: QUICKSORT//////////////////////////////////////////////////////////
 
+////compareNums is a helper func to compare 2 numbers (for quicksort)
 // a before b -> return positive value
 // b before a -> return neg value
 // else return 0
 
-int compare(const void* a, const void* b) {
+int compareNums(const void* a, const void* b) {
     return (*(int*)a - *(int*)b);
 }
 
+//declaring function for threading
+void *threading();
+
+//multithreaded sort
+void *threadingSortHelper(void* input){
+        ArgsForThread* arguments = (ArgsForThread*) input;
+        qsort(&arr[arguments->begin], arguments->end - arguments->begin +1, sizeof(int), compare);
+        return NULL;
+}
+
+
+///////////////////////////// Main method
 int main() {
 
     //ask user for N
@@ -55,24 +75,50 @@ int main() {
     randomNum(min, max, count);
 
     free(arr); //to free memory 
-    return 0;
-}
-///////////////////////////////////////////////////////////////////////////////////
 
-//function 1: sorting w threads
-  //get the array 
-  //create threads to sort 
-  //create thread to merge
-  //calculate the time it took to finish sorting
-  //printf the time it took 
 
-//function 2: sorting w/o threads
-  //get the array 
-  //"hard code" the sorting algorithm 
-  //calculate the time it took to finish sorting 
-  //printf the time it took 
+
+////////////Thread creation
+        //thread1 & thread2 will sort half of the array; thread3 will merge threads 1 & 
+        pthread_t thread1, thread2, thread3;
+        pthread_create(&thread1, NULL, threadingSort, NULL);
+
+        return 0;
 
 //call function 1
 //call function 2
+}
+//////end of main
+/////////////////////////////////////////////////////////////////////////////////// END QUICKSORT
 
-//end of main
+
+///////////////////////////////////////////////////////////////////////function 1: sorting w threads
+multithreadedSort(){
+        //get the array ///////////// we nee to copy the array here
+
+        
+        
+////////Thread creation
+        //thread1 & thread2 will sort half of the array; thread3 will merge threads 1 & 2
+        pthread_t thread1, thread2, thread3;
+
+        //use struct to divide array
+        ArgsForThread arg1 = {0, (N/2) -1}; //first half of our array
+        ArgsForThread arg2= {(N/2), N- 1}; //2nd hlf of our array
+
+        //start timer
+        clock_t 
+
+        pthread_create(&thread1, NULL, threadingSortHelper, NULL);
+        
+        //create thread to merge
+        //calculate the time it took to finish sorting
+        //printf the time it took 
+}
+
+///////////////////////////////////////////////////////////////////////function 2: sorting w/o threads
+        //get the array 
+        //"hard code" the sorting algorithm 
+        //calculate the time it took to finish sorting 
+        //printf the time it took 
+
