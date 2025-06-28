@@ -1,1 +1,26 @@
+//headers 
 
+//define global variables: the array, the size of array
+
+//function 1: sorting w threads
+  //get the array 
+  //create threads to sort 
+  //create thread to merge
+  //calculate the time it took to finish sorting
+  //printf the time it took 
+
+//function 2: sorting w/o threads
+  //get the array 
+  //"hard code" the sorting algorithm 
+  //calculate the time it took to finish sorting 
+  //printf the time it took 
+
+
+//main
+//random number generator
+  //assign those numbers to the array 
+
+//call function 1
+//call function 2
+
+//end of main
