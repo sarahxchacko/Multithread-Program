@@ -2,7 +2,7 @@
 
 //define global variables: the array, the size of array
 
-//sorting algorithm: QUICKSORT
+//sorting algorithm: QUICKSORT//////////////////////////////////////////////////////////
 // C Program to sort an array using qsort() function in C
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +27,7 @@ int main() {
 
     return 0;
 }
+///////////////////////////////////////////////////////////////////////////////////
 
 //function 1: sorting w threads
   //get the array 
