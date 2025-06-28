@@ -49,10 +49,6 @@ int main() {
   //calculate the time it took to finish sorting 
   //printf the time it took 
 
-
-//random number generator
-  //assign those numbers to the array 
-
 //call function 1
 //call function 2
 
