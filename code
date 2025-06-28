@@ -5,7 +5,7 @@
 #include <time.h> 
 
 //Global Variables
-int N = 1000;
+int N = 1000; 
 int arr[N];
 
 //random array generation
