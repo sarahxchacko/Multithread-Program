@@ -5,15 +5,19 @@
 #include <time.h> 
 
 //Global Variables
-int N = 1000; 
+int N; 
 int arr[N];
 
 //random array generation
-srand((unsigned)time(NULL));
-for(int i = 0; i < N; i++) {
-    arr[i] = rand() % 20000;
+void randomNum(int min, int max, int count) {
+        printf("Random numbers between %d and %d: ", min, max);
+        //loop till i = count
+        for (int i =0; i <= count; i++) {
+                int rd_num = rand() % (max - min + 1) + min;
+                printf("%d ", rd_num);
+        }
+        printf("\n");
 }
-
 //sorting algorithm: QUICKSORT//////////////////////////////////////////////////////////
 // C Program to sort an array using qsort() function in C
 
@@ -25,12 +29,24 @@ int compare(const void* a, const void* b) {
     return (*(int*)a - *(int*)b);
 }
 
-int main() {	
-  	// Sorting arr using inbuilt quicksort method
+int main() {
+
+    //ask user for N
+        printf("What would you like the size of the array to be?\n");
+        scanf("%d", &N);
+  	
+    // Sorting arr using inbuilt quicksort method
     qsort(arr, n, sizeof(int), compare);
 
     for (int i = 0; i < n; i++)
         printf("%d ", arr[i]);
+
+
+    //call randomNum()
+    srand(time(NULL)); // seed the generator
+    int min = 0, max = N, count = N;
+    randomNum(min, max, count);
+
 
     return 0;
 }
