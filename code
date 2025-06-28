@@ -19,11 +19,8 @@ void randomNum(int min, int max, int count) {
         printf("\n");
 }
 //sorting algorithm: QUICKSORT//////////////////////////////////////////////////////////
-// C Program to sort an array using qsort() function in C
 
-
-// If a should be placed before b, compare function should
-// return positive value, if it should be placed after b,
+// If a should be placed before b, compare func returns positive value, if it should be placed after b,
 // it should return negative value. Returns 0 otherwise
 int compare(const void* a, const void* b) {
     return (*(int*)a - *(int*)b);
