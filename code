@@ -2,6 +2,8 @@
 
 //define global variables: the array, the size of array
 
+//sorting algorithm: QUICKSORT
+
 //function 1: sorting w threads
   //get the array 
   //create threads to sort 
