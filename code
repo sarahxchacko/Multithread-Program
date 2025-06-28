@@ -21,8 +21,10 @@ void randomNum(int min, int max, int count) {
 
 //sorting algorithm: QUICKSORT//////////////////////////////////////////////////////////
 
-// If a should be placed before b, compare func returns positive value, if it should be placed after b,
-// it should return negative value. Returns 0 otherwise
+// a before b -> return positive value
+// b before a -> return neg value
+// else return 0
+
 int compare(const void* a, const void* b) {
     return (*(int*)a - *(int*)b);
 }
