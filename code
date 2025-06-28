@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthreads.h>
+#include <time.h> 
 
 //Global Variables
 int arr[] = { 4, 2, 5, 3, 1 };
@@ -43,7 +44,6 @@ int main() {
   //printf the time it took 
 
 
-//main
 //random number generator
   //assign those numbers to the array 
 
