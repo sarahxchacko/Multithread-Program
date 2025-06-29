@@ -76,13 +76,6 @@ int main() {
 
     free(arr); //to free memory 
 
-
-
-////////////Thread creation
-        //thread1 & thread2 will sort half of the array; thread3 will merge threads 1 & 
-        pthread_t thread1, thread2, thread3;
-        pthread_create(&thread1, NULL, threadingSort, NULL);
-
         return 0;
 
 //call function 1
@@ -94,26 +87,47 @@ int main() {
 
 ///////////////////////////////////////////////////////////////////////function 1: sorting w threads
 multithreadedSort(){
-        //get the array ///////////// we nee to copy the array here
+        //get the array ///////////// we need to copy the array here
+        /////array////
 
-        
-        
 ////////Thread creation
         //thread1 & thread2 will sort half of the array; thread3 will merge threads 1 & 2
         pthread_t thread1, thread2, thread3;
 
         //use struct to divide array
-        ArgsForThread arg1 = {0, (N/2) -1}; //first half of our array
-        ArgsForThread arg2= {(N/2), N- 1}; //2nd hlf of our array
+        ArgsForThread half1 = {0, (N/2) -1}; //first half of our array
+        ArgsForThread half2= {(N/2), N- 1}; //2nd hlf of our array
 
-        //start timer
-        clock_t 
+        //start timer before we create the threads
+        clock_t startTime = clock();
+        //Typecast to double
+        finishTime = (double)startTime;
 
-        pthread_create(&thread1, NULL, threadingSortHelper, NULL);
+        //now we'll make the 2 threads and pass them the 1st & 2nd halves of the array respectively
+        pthread_create(&thread1, NULL, threadingSortHelper, &half1);
+        pthread_create(&thread2, NULL, threadingSortHelper, &half2);
+
+        //join the threads
+        pthread_join(t1, NULL);
+        pthread_join(t2, NULL);
+
+        //Now that we have both halves sorted, we'll create a thread to merge them
+        pthread_create(&t3, NULL, threaded_merge, NULL);
+
+        //Stop timer
+        clock_t finishTime = clock();
+        //Typecast to double
+        finishTime = (double)finishTime;
         
-        //create thread to merge
+
         //calculate the time it took to finish sorting
-        //printf the time it took 
+        //we're using the CLOCKS_PER_SEC constant defined in time.h
+        //multiply by 1000 to get the time in ms instead of seconds
+        double elapsedTime = 1000 * ((finishTime - startTime)/ CLOCKS_PER_SEC)
+
+        //print the time elapsed
+        printf("With threads, we finished sorting in .2f ms\n", elapsedTime);
+
 }
 
 ///////////////////////////////////////////////////////////////////////function 2: sorting w/o threads
