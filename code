@@ -37,16 +37,44 @@ int compareNums(const void* a, const void* b) {
     return (*(int*)a - *(int*)b);
 }
 
-//declaring function for threading
-void *threading();
-
 //multithreaded sort
 void *threadingSortHelper(void* input){
+        //Use the struct we made ealier in our code
         ArgsForThread* arguments = (ArgsForThread*) input;
+
+        //call the built-in quicksort method
         qsort(&arr[arguments->begin], arguments->end - arguments->begin +1, sizeof(int), compare);
+
         return NULL;
 }
 
+//merge method///////////////////////////////////
+void *mergeThreads(void *input){
+        //Using merge algo from merge sort
+        int a = 0, count= 0, b = N/2; //b is our halfway point
+
+        //comparison loop
+        for(; b< N && a<N/2; count++){
+
+                if(arr[a] < arr[b]){ 
+                        mergedArray[count] = arr[a++];
+                }
+
+                else{ mergedArray[b++]; }
+        }
+
+        //include other left half values
+        for (; a < N / 2; count++, a++) {
+                merged[count] = arr[a];
+        }
+
+        //include other right half values
+        for (; b < N; count++, b++) {
+                merged[count] = arr[b];
+        }
+
+        return NULL;
+}
 
 ///////////////////////////// Main method
 int main() {
@@ -112,7 +140,7 @@ multithreadedSort(){
         pthread_join(t2, NULL);
 
         //Now that we have both halves sorted, we'll create a thread to merge them
-        pthread_create(&t3, NULL, threaded_merge, NULL);
+        pthread_create(&t3, NULL, mergeThreads, NULL);
 
         //Stop timer
         clock_t finishTime = clock();
