@@ -48,7 +48,7 @@ void *threadingSortHelper(void* input){
         return NULL;
 }
 
-//merge method///////////////////////////////////
+// merge method///////////////////////////////////
 void *mergeThreads(void *input){
         //Using merge algo from merge sort
         int a = 0, count= 0, b = N/2; //b is our halfway point
@@ -76,7 +76,57 @@ void *mergeThreads(void *input){
         return NULL;
 }
 
-///////////////////////////// Main method
+
+
+
+//////////////////////////////////////////////////// function 2: sorting w/o threads ////////////////
+
+//QUICK SORT W/O THREADS
+void swap(int* a, int* b) {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+}
+
+int partition(int arr[], int left, int right) {
+        //Initialize pivot to be the first element
+        int p = arr[left];
+        int i = left;
+        int j = right;
+
+        while (i < j){
+                //find the first element > than pivot
+                while (arr[i] <= p && i <= right - 1) {
+                        i++;
+                }
+                //find the first element < than pivot
+                while (arr[j] > p && j >= left + 1) {
+                        j--;
+                }
+                if (i < j) {
+                        swap(&arr[i], &arr[j]);
+                }
+        }
+        swap(&arr[left], &arr[j]);
+        return j;
+}
+
+
+void quickSort(int arr[], int left, int right) {
+
+        if (left < right) {
+        //call partition function
+        int split = partition(arr, left, right);
+        //recursively call for left and right
+        quickSort(arr, left, split - 1);
+        quickSort(arr, split + 1, right);
+        }
+}
+
+//////////////////////////// end of function 2 ///////////////////////////////////////////////////////
+
+
+///////////////////////////// Main method ///////////////////////////////////////////////////////////
 int main() {
 
     //ask user for N
@@ -98,33 +148,63 @@ int main() {
     int min = 0, max = 10000, count = N;
     randomNum(min, max, count); //fills array
 
-    //debugging check
-    printf("Contents of array after randomNum(): \n");
-    for (int i = 0; i < N; i++) {
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
-    
+    //DEBUGGING (uncomment to debug) */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+    //printf("Contents of array after randomNum(): \n");
+    //for (int i = 0; i < N; i++) {
+    //   printf("%d ", arr[i]);
+    // }
+    // printf("\n"); 
+    // */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+
+//QUESTION: do you need this call when using threads? 
+
     // Sorting arr using inbuilt quicksort method
     qsort(arr, N, sizeof(int), compare);
 
-    //print after sorting
+
+
+    //calling function 2 */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+   //start timer
+  clock_t start = clock();
+
+   //comment out the line below to call function 1
+   quickSort(arr, 0, N - 1);
+
+  clock_t end = clock();
+  double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+
+// my thought with this is that according to which function you want to call (function 1 or function 2) we can comment 
+//out the call for the other function. does that make sense? ORRRR do you want to just have two separate calls 
+//and timers for both functions and have them run like that? 
+
+   //print after sorting
    printf("array after sorting: \n");
    for (int i = 0; i < N; i++) {
         printf("%d ", arr[i]);
    }
    printf("\n");
+   printf("The time taken by the chosen function is: %f milliseconds \n", time_taken * 1000);
+
+
+
+    //DEBUGGING (uncomment to debug) */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+    //print after sorting
+   //printf("array after sorting: \n");
+   //for (int i = 0; i < N; i++) {
+     //   printf("%d ", arr[i]);
+    // }
+   // printf("\n");
+   // */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
 
   //to free memory 
- free(arr); 
- free(mergedArray);
+  free(arr); 
+  free(mergedArray);
 return 0;
 
-//call function 1
-//call function 2
 }
 //////end of main
-/////////////////////////////////////////////////////////////////////////////////// END QUICKSORT
+//////////////////////////////////////////////////////////////////////////////// END QUICKSORT
 
 
 ///////////////////////////////////////////////////////////////////////function 1: sorting w threads
@@ -171,68 +251,6 @@ multithreadedSort(){
         printf("With threads, we finished sorting in .2f ms\n", elapsedTime);
 
 }
-
-///////////////////////////////////////////////////////////////////////function 2: sorting w/o threads
-
-//function 2: QUICK SORT W/O THREADS
-void swap(int* a, int* b) {
-        int temp = *a;
-        *a = *b;
-        *b = temp;
-}
-
-int partition(int arr[], int left, int right) {
-        //Initialize pivot to be the first element
-        int p = arr[left];
-        int i = left;
-        int j = right;
-
-        while (i < j){
-                //find the first element > than pivot
-                while (arr[i] <= p && i <= right - 1) {
-                        i++;
-                }
-                //find the first element < than pivot
-                while (arr[j] > p && j >= left + 1) {
-                        j--;
-                }
-                if (i < j) {
-                        swap(&arr[i], &arr[j]);
-                }
-        }
-        swap(&arr[left], &arr[j]);
-        return j;
-}
-
-
-void quickSort(int arr[], int left, int right) {
-
-        if (left < right) {
-        //call partition function
-        int split = partition(arr, left, right);
-        //recursive call for left and right
-        quickSort(arr, left, split - 1);
-        quickSort(arr, split + 1, right);
-        }
-}
-
-//////goes inside main:
-/////////calling function 2
-  //start timer
-  clock_t start = clock();
-
-   quickSort(arr, 0, N - 1);
-
-  clock_t end = clock();
-  double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-   //print after sorting
-   printf("array after sorting: \n");
-   for (int i = 0; i < N; i++) {
-        printf("%d ", arr[i]);
-   }
-   printf("\n");
-   printf("The time taken by function 2, sorting without threads: %f seconds\n", time_taken);
 
 
 
