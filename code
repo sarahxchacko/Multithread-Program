@@ -173,8 +173,73 @@ multithreadedSort(){
 }
 
 ///////////////////////////////////////////////////////////////////////function 2: sorting w/o threads
-        //get the array 
-        //"hard code" the sorting algorithm 
-        //calculate the time it took to finish sorting 
-        //printf the time it took 
+
+//function 2: QUICK SORT W/O THREADS
+void swap(int* a, int* b) {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+}
+
+int partition(int arr[], int low, int high) {
+        //Initialize pivot to be the first element
+        int p = arr[low];
+        int i = low;
+        int j = high;
+
+        while (i < j){
+                //find the first element > than pivot
+                while (arr[i] <= p && i <= high - 1) {
+                        i++;
+                }
+                //find the first element < than pivot
+                while (arr[j] > p && j >= low + 1) {
+                        j--;
+                }
+                if (i < j) {
+                        swap(&arr[i], &arr[j]);
+                }
+        }
+        swap(&arr[low], &arr[j]);
+        return j;
+}
+
+
+void quickSort(int arr[], int low, int high) {
+
+        if (low < high) {
+        //call partition function
+        int pi = partition(arr, low, high);
+        //recursive call for left and right
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+        }
+}
+
+//////goes inside main:
+/////////calling function 2
+  //start timer
+  clock_t start = clock();
+
+   quickSort(arr, 0, N - 1);
+
+  clock_t end = clock();
+  double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+   //print after sorting
+   printf("array after sorting: \n");
+   for (int i = 0; i < N; i++) {
+        printf("%d ", arr[i]);
+   }
+   printf("\n");
+   printf("The time taken by function 2, sorting without threads: %f seconds\n", time_taken);
+
+
+
+
+
+
+
+
+
 
