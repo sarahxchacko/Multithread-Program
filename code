@@ -6,20 +6,20 @@
 
 //Global Variables
 int N; 
-int *arr[N]; //the * so that it can be dynamically allocated
-int *mergedArray[N];
+int *arr; //the * so that it can be dynamically allocated
+int *mergedArray; //removed [N]
 
 //Argument struct
-struct ArgsForThread{
+typedef struct ArgsForThread{
         int begin;
         int end;
-}
+} ArgsForThread;
 
 //random array generation
 void randomNum(int min, int max, int count) {
         printf("Random numbers between %d and %d: ", min, max); //debugging
         //loop till i = count
-        for (int i =0; i <= count; i++) {
+        for (int i = 0; i < count; i++) {
                 arr[i] = rand() % (max - min + 1) + min;
                 printf("%d ", arr[i]); // debugging statement
         }
@@ -43,7 +43,7 @@ void *threadingSortHelper(void* input){
         ArgsForThread* arguments = (ArgsForThread*) input;
 
         //call the built-in quicksort method
-        qsort(&arr[arguments->begin], arguments->end - arguments->begin +1, sizeof(int), compare);
+        qsort(&arr[arguments->begin], arguments->end - arguments->begin +1, sizeof(int), compareNums);
 
         return NULL;
 }
@@ -60,17 +60,17 @@ void *mergeThreads(void *input){
                         mergedArray[count] = arr[a++];
                 }
 
-                else{ mergedArray[b++]; }
+                else{ mergedArray[count] = arr[b++]; }
         }
 
         //include other left half values
         for (; a < N / 2; count++, a++) {
-                merged[count] = arr[a];
+                mergedArray[count] = arr[a];
         }
 
         //include other right half values
         for (; b < N; count++, b++) {
-                merged[count] = arr[b];
+                mergedArray[count] = arr[b];
         }
 
         return NULL;
@@ -82,16 +82,12 @@ int main() {
     //ask user for N
         printf("What would you like the size of the array to be?\n");
         scanf("%d", &N);
-  	
-    // Sorting arr using inbuilt quicksort method
-    qsort(arr, N, sizeof(int), compare);
+    
+    //allocate memory for array and mergedArray [creates array]
+    arr = malloc(N * sizeof(int));
+    mergedArray = malloc(N * sizeof(int));	
 
-    for (int i = 0; i < N; i++)
-        printf("%d ", arr[i]);
-
-    //allocate memory for array
-        arr = malloc(N * sizeof(int));
-        if (arr == NULL) {
+    if (arr == NULL) {
                 printf("Memory allocation failed.\n");
                 return 1;
         }
@@ -99,12 +95,30 @@ int main() {
 
     //call randomNum()
     srand(time(NULL)); // seed the generator
-    int min = 0, max = 10,000, count = N;
-    randomNum(min, max, count);
+    int min = 0, max = 10000, count = N;
+    randomNum(min, max, count); //fills array
 
-    free(arr); //to free memory 
+    //debugging check
+    printf("Contents of array after randomNum(): \n");
+    for (int i = 0; i < N; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    // Sorting arr using inbuilt quicksort method
+    qsort(arr, N, sizeof(int), compare);
 
-        return 0;
+    //print after sorting
+   printf("array after sorting: \n");
+   for (int i = 0; i < N; i++) {
+        printf("%d ", arr[i]);
+   }
+   printf("\n");
+
+  //to free memory 
+ free(arr); 
+ free(mergedArray);
+return 0;
 
 //call function 1
 //call function 2
