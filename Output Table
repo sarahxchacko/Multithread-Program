@@ -1,7 +1,7 @@
 Results:
 
-N            USING NON-THREADING           USING MULTITHREADING
-1000
-5000
-10000
-20000
+N           USING NON-THREADING           USING MULTITHREADING
+1000       0.163000 milliseconds
+5000       0.942000 milliseconds
+10000      4.223000 milliseconds
+20000      4.279000 milliseconds
