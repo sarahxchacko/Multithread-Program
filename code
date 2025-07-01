@@ -181,38 +181,38 @@ void swap(int* a, int* b) {
         *b = temp;
 }
 
-int partition(int arr[], int low, int high) {
+int partition(int arr[], int left, int right) {
         //Initialize pivot to be the first element
-        int p = arr[low];
-        int i = low;
-        int j = high;
+        int p = arr[left];
+        int i = left;
+        int j = right;
 
         while (i < j){
                 //find the first element > than pivot
-                while (arr[i] <= p && i <= high - 1) {
+                while (arr[i] <= p && i <= right - 1) {
                         i++;
                 }
                 //find the first element < than pivot
-                while (arr[j] > p && j >= low + 1) {
+                while (arr[j] > p && j >= left + 1) {
                         j--;
                 }
                 if (i < j) {
                         swap(&arr[i], &arr[j]);
                 }
         }
-        swap(&arr[low], &arr[j]);
+        swap(&arr[left], &arr[j]);
         return j;
 }
 
 
-void quickSort(int arr[], int low, int high) {
+void quickSort(int arr[], int left, int right) {
 
-        if (low < high) {
+        if (left < right) {
         //call partition function
-        int pi = partition(arr, low, high);
+        int split = partition(arr, left, right);
         //recursive call for left and right
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+        quickSort(arr, left, split - 1);
+        quickSort(arr, split + 1, right);
         }
 }
 
