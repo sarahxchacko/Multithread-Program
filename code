@@ -7,7 +7,7 @@
 //Global Variables
 int N; 
 int *arr; //the * so that it can be dynamically allocated
-int *mergedArray; //removed [N]
+int *mergedArray;
 int *copiedArr;
 
 //Argument struct
@@ -135,7 +135,7 @@ void multithreadedSort(){
 
 
 
-//////////////////////////////////////////////////// function 2: sorting w/o threads ////////////////
+//////////////////////// function 2: sorting w/o threads ////////////////
 
 //QUICK SORT W/O THREADS
 void swap(int* a, int* b) {
@@ -215,32 +215,15 @@ int main() {
     //Call function 1
     multithreadedSort();
 
-    //calling function 2 */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
-   //start timer
-  clock_t start = clock();
-
-   //comment out the line below to call function 1
-   //qsort(arr, 0, N - 1);
-
-  clock_t end = clock();
-  double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
-
-
-// my thought with this is that according to which function you want to call (function 1 or function 2) we can comment 
-//out the call for the other function. does that make sense? ORRRR do you want to just have two separate calls 
-//and timers for both functions and have them run like that? 
-
-   //print after sorting
-   printf("array after sorting: \n");
-   for (int i = 0; i < N; i++) {
-        printf("%d ", arr[i]);
-   }
-   printf("\n");
-   printf("The time taken by the chosen function is: %f milliseconds \n", time_taken * 1000);
+    //call function 2 
+    clock_t start = clock(); //starts clock
+    qsort(arr, 0, N - 1);    //calls functions
+    clock_t end = clock();   //ends clock 
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
 
 
 
-    //DEBUGGING (uncomment to debug) */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+       //DEBUGGING (uncomment to debug) */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
     //print after sorting
    //printf("array after sorting: \n");
    //for (int i = 0; i < N; i++) {
@@ -248,11 +231,15 @@ int main() {
     // }
    // printf("\n");
    // */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+   
+   printf("The time taken by function 2 is: %f milliseconds \n", time_taken * 1000);
+
 
   //to free memory 
   free(arr); 
   free(mergedArray);
   free(copiedArr);
+
 return 0;
 
 }
