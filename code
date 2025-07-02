@@ -1,19 +1,20 @@
 //headers 
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthreads.h>
+#include <pthread.h>
 #include <time.h> 
 
 //Global Variables
 int N; 
 int *arr; //the * so that it can be dynamically allocated
 int *mergedArray; //removed [N]
+int *copiedArr;
 
 //Argument struct
 typedef struct ArgsForThread{
         int begin;
         int end;
-} ArgsForThread;
+};
 
 //random array generation
 void randomNum(int min, int max, int count) {
@@ -39,11 +40,11 @@ int compareNums(const void* a, const void* b) {
 
 //multithreaded sort
 void *threadingSortHelper(void* input){
-        //Use the struct we made ealier in our code
+        //Use the struct we made earlier in our code
         ArgsForThread* arguments = (ArgsForThread*) input;
 
         //call the built-in quicksort method
-        qsort(&arr[arguments->begin], arguments->end - arguments->begin +1, sizeof(int), compareNums);
+        qsort(&copiedArr[arguments->begin], arguments->end - arguments->begin +1, sizeof(int), compareNums);
 
         return NULL;
 }
@@ -57,25 +58,80 @@ void *mergeThreads(void *input){
         for(; b< N && a<N/2; count++){
 
                 if(arr[a] < arr[b]){ 
-                        mergedArray[count] = arr[a++];
+                        mergedArray[count] = copiedArr[a++];
                 }
 
-                else{ mergedArray[count] = arr[b++]; }
+                else{ mergedArray[count] = copiedArr[b++]; }
         }
 
         //include other left half values
-        for (; a < N / 2; count++, a++) {
-                mergedArray[count] = arr[a];
+        for (; a < N/ 2; count++, a++) {
+                mergedArray[count] = copiedArr[a];
         }
 
         //include other right half values
-        for (; b < N; count++, b++) {
-                mergedArray[count] = arr[b];
+        for (; b< N; count++, b++) {
+                mergedArray[count] = copiedArr[b];
         }
 
+        //Don't return anything
         return NULL;
 }
 
+///////////////////////////////////////////////////////////////////////function 1: sorting w threads
+void multithreadedSort(){
+        //get the array ///////////// we need to copy the array here
+        /////array////
+
+        //copy the array 
+        //get size of arr
+        copiedArr = malloc(N * sizeof(int));
+
+        //use loop to copy the array
+        for(int i = 0; i< N; i++){
+            copiedArr[i] = arr[i];
+        }
+
+////////Thread creation
+        //thread1 & thread2 will sort half of the array; thread3 will merge threads 1 & 2
+        pthread_t thread1, thread2, thread3;
+
+        //use struct to divide array
+        ArgsForThread half1 = {0, (N/2) -1}; //first half of our array
+        ArgsForThread half2= {(N/2), N- 1}; //2nd hlf of our array
+
+        //start timer before we create the threads
+        clock_t startTime = clock();
+
+
+        //now we'll make the 2 threads and pass them the 1st & 2nd halves of the array respectively
+        pthread_create(&thread1, NULL, threadingSortHelper, &half1);
+        pthread_create(&thread2, NULL, threadingSortHelper, &half2);
+
+        //join the threads
+        pthread_join(thread1, NULL);
+        pthread_join(thread2, NULL);
+
+        //Now that we have both halves sorted, we'll create a thread to merge them
+        pthread_create(&thread3, NULL, mergeThreads, NULL);
+        
+        //let thread 3 rejoin
+        pthread_join(thread3, NULL);
+        //Stop timer
+        clock_t finishTime = clock();
+
+        
+
+        //calculate the time it took to finish sorting.
+        //we're using the CLOCKS_PER_SEC constant defined in time.h
+        //multiply by 1000 to get the time in ms instead of seconds
+        double elapsedTime = 1000 * ((finishTime - startTime)/ CLOCKS_PER_SEC);
+
+        //print the time elapsed
+        printf("With threads, we finished sorting in %.2f ms\n", elapsedTime);
+
+}
+///////////////////////////////////////////////////end func 1
 
 
 
@@ -155,20 +211,16 @@ int main() {
     // }
     // printf("\n"); 
     // */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
-
-//QUESTION: do you need this call when using threads? 
-
-    // Sorting arr using inbuilt quicksort method
-    qsort(arr, N, sizeof(int), compare);
-
-
+    
+    //Call function 1
+    multithreadedSort();
 
     //calling function 2 */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
    //start timer
   clock_t start = clock();
 
    //comment out the line below to call function 1
-   qSort(arr, 0, N - 1);
+   //qsort(arr, 0, N - 1);
 
   clock_t end = clock();
   double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -200,57 +252,12 @@ int main() {
   //to free memory 
   free(arr); 
   free(mergedArray);
+  free(copiedArr);
 return 0;
 
 }
 //////end of main
 //////////////////////////////////////////////////////////////////////////////// END QUICKSORT
-
-
-///////////////////////////////////////////////////////////////////////function 1: sorting w threads
-multithreadedSort(){
-        //get the array ///////////// we need to copy the array here
-        /////array////
-
-////////Thread creation
-        //thread1 & thread2 will sort half of the array; thread3 will merge threads 1 & 2
-        pthread_t thread1, thread2, thread3;
-
-        //use struct to divide array
-        ArgsForThread half1 = {0, (N/2) -1}; //first half of our array
-        ArgsForThread half2= {(N/2), N- 1}; //2nd hlf of our array
-
-        //start timer before we create the threads
-        clock_t startTime = clock();
-        //Typecast to double
-        finishTime = (double)startTime;
-
-        //now we'll make the 2 threads and pass them the 1st & 2nd halves of the array respectively
-        pthread_create(&thread1, NULL, threadingSortHelper, &half1);
-        pthread_create(&thread2, NULL, threadingSortHelper, &half2);
-
-        //join the threads
-        pthread_join(thread1, NULL);
-        pthread_join(thread2, NULL);
-
-        //Now that we have both halves sorted, we'll create a thread to merge them
-        pthread_create(&thread3, NULL, mergeThreads, NULL);
-
-        //Stop timer
-        clock_t finishTime = clock();
-        //Typecast to double
-        finishTime = (double)finishTime;
-        
-
-        //calculate the time it took to finish sorting
-        //we're using the CLOCKS_PER_SEC constant defined in time.h
-        //multiply by 1000 to get the time in ms instead of seconds
-        double elapsedTime = 1000 * ((finishTime - startTime)/ CLOCKS_PER_SEC)
-
-        //print the time elapsed
-        printf("With threads, we finished sorting in .2f ms\n", elapsedTime);
-
-}
 
 
 
