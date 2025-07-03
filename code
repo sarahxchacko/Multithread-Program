@@ -14,7 +14,7 @@ int *copiedArr;
 typedef struct ArgsForThread{
         int begin;
         int end;
-};
+}; //ArgsForThread; 
 
 //random array generation
 void randomNum(int min, int max, int count) {
@@ -57,7 +57,7 @@ void *mergeThreads(void *input){
         //comparison loop
         for(; b< N && a<N/2; count++){
 
-                if(arr[a] < arr[b]){ 
+                if(copiedArr[a] < CopiedArr[b]){ 
                         mergedArray[count] = copiedArr[a++];
                 }
 
@@ -125,7 +125,7 @@ void multithreadedSort(){
         //calculate the time it took to finish sorting.
         //we're using the CLOCKS_PER_SEC constant defined in time.h
         //multiply by 1000 to get the time in ms instead of seconds
-        double elapsedTime = 1000 * ((finishTime - startTime)/ CLOCKS_PER_SEC);
+        double elapsedTime = 1000.0 * ((double)(finishTime - startTime)/ CLOCKS_PER_SEC);
 
         //print the time elapsed
         printf("With threads, we finished sorting in %.2f ms\n", elapsedTime);
@@ -179,6 +179,19 @@ void quickSort(int arr[], int left, int right) {
         }
 }
 
+//wrapper function for quicksort w/o threads
+void singlethreadedSort() {
+
+       clock_t start = clock();
+       quickSort(arr, 0, N - 1);
+       clock_t end = clock();
+       double elapsedTime = 1000.0 * ((double)(end - start)/ CLOCKS_PER_SEC);
+
+        //print the time elapsed
+        printf("Without threads, we finished sorting in %.2f ms\n", elapsedTime);
+        printf("\n");
+}
+
 //////////////////////////// end of function 2 ///////////////////////////////////////////////////////
 
 
@@ -216,10 +229,7 @@ int main() {
     multithreadedSort();
 
     //call function 2 
-    clock_t start = clock(); //starts clock
-    qsort(arr, 0, N - 1);    //calls functions
-    clock_t end = clock();   //ends clock 
-    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    singlethreadedSort();
 
 
 
@@ -232,8 +242,7 @@ int main() {
    // printf("\n");
    // */*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
    
-   printf("The time taken by function 2 is: %f milliseconds \n", time_taken * 1000);
-
+  
 
   //to free memory 
   free(arr); 
