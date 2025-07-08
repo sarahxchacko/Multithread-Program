@@ -14,7 +14,7 @@ int *copiedArr;
 typedef struct ArgsForThread{
         int begin;
         int end;
-}; //ArgsForThread; 
+}; ArgsForThread; 
 
 //random array generation
 void randomNum(int min, int max, int count) {
@@ -57,7 +57,7 @@ void *mergeThreads(void *input){
         //comparison loop
         for(; b< N && a<N/2; count++){
 
-                if(copiedArr[a] < CopiedArr[b]){ 
+                if(copiedArr[a] < copiedArr[b]){ 
                         mergedArray[count] = copiedArr[a++];
                 }
 
